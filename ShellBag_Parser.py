@@ -1,15 +1,27 @@
 from winreg import *
+import struct
 
-Wininfo_Key = OpenKey(HKEY_CURRENT_USER,r'Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU')
+BagMRU_Path = r'Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU'
+Var_Hive = ConnectRegistry(None, HKEY_CURRENT_USER)
+Var_Key = OpenKey(Var_Hive, BagMRU_Path)
 
-ITEMPOS,FileSize,FileName,CreateDate,ModifiedDate,Unicode_FileName = [],[],[],[],[],[]
+BagMRU_Cut = QueryInfoKey(Var_Key)[0]
 
-try:
-    cut = 0
-    while True:
-    	Data = (QueryValueEx(Wininfo_Key, str(cut))[0])
-    	print(Data[0])
-    	print(ITEMPOS[cut])
-    	cut+=1
-except:
-	print(cut)
+for i in BagMRU_Cut:
+	try:
+		name, data, x = EnumValue(Var_Key, str(i))
+		if not name in ("MRULISTEX", "NodeSlot", "NodeSlots"):
+			ts = QueryInfoKey(Var_Key)[2]
+			print(ts)
+	
+	except:
+		pass
+
+# try:
+# 	cut = 0
+# 	while True:
+# 		Data = QueryValueEx(Wininfo_Key, str(cut))[0]
+# 		print(struct.unpack_from("<B",Data[14:21])[0])
+# 		cut += 1
+# except WindowsError:
+# 	pass
