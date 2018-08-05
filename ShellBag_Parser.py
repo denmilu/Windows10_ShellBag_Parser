@@ -7,11 +7,12 @@ Var_Key = OpenKey(Var_Hive, BagMRU_Path)
 
 BagMRU_Cut = QueryInfoKey(Var_Key)[0]
 
-for i in BagMRU_Cut:
+for i in range(BagMRU_Cut):
 	try:
-		name, data, x = EnumValue(Var_Key, str(i))
+		name, data, x = EnumValue(Var_Key, i)
 		if not name in ("MRULISTEX", "NodeSlot", "NodeSlots"):
-			ts = QueryInfoKey(Var_Key)[2]
+			a = Var_Key + '//' + i
+			ts = QueryInfoKey(a)[2]
 			print(ts)
 	
 	except:
