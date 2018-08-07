@@ -11,7 +11,8 @@ for i in range(BagMRU_Cut):
 	try:
 		name, data, x = EnumValue(Var_Key, i)
 		if not name in ("MRULISTEX", "NodeSlot", "NodeSlots"):
-			a = Var_Key + '//' + i
+			Sub_BagMRU_Path = BagMRU_Path + r'\\' + str(i)
+			
 			ts = QueryInfoKey(a)[2]
 			print(ts)
 	
@@ -26,4 +27,3 @@ for i in range(BagMRU_Cut):
 # 		cut += 1
 # except WindowsError:
 # 	pass
-
