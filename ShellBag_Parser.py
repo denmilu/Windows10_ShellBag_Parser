@@ -50,7 +50,6 @@ def BagMRU_Parser():
 def Itempos_Size(data):
 	
 	
-
 BagMRU_Path = r'Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU'
 Var_Hive = ConnectRegistry(None, HKEY_CURRENT_USER)
 Var_Key = OpenKey(Var_Hive, BagMRU_Path) # BagMRU 핸들러
