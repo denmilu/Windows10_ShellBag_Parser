@@ -15,6 +15,7 @@ def loop_Sub_Parser(Sub_Var_Key, Sub_Key_Path, Sub_Key_Cut, cut):
 				loop_Sub_Key = OpenKey(Var_Hive, loop_Key_Path) # 서브키 핸들러 생성
 				ts = QueryInfoKey(loop_Sub_Key)[2] # 작성된 시간
 				print(' '*cut +'{} {} {} {}'.format(loop_Key_Path, name, Win_ts(ts), cut))
+				Itempos_Size(data)
 
 				if(QueryInfoKey(loop_Sub_Key)[1] != 2): # 하위키의 값이 더 있을 경우
 					cut+=1
@@ -37,7 +38,7 @@ def BagMRU_Parser():
 				Sub_Var_Key = OpenKey(Var_Hive, Sub_BagMRU_Path) # 하위키 핸들러
 				ts = QueryInfoKey(Sub_Var_Key)[2]
 				print(Sub_BagMRU_Path, name, Win_ts(ts), cut)
-				print(data)
+				Itempos_Size(data)
 
 				if(QueryInfoKey(Sub_Var_Key)[1] != 2): # 하위키의 값이 2개가 아닐 경우 (2개보다 많을 경우)
 					cut+=1
@@ -48,8 +49,8 @@ def BagMRU_Parser():
 			pass
 
 def Itempos_Size(data):
-	
-	
+	print(data[:2])
+
 BagMRU_Path = r'Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU'
 Var_Hive = ConnectRegistry(None, HKEY_CURRENT_USER)
 Var_Key = OpenKey(Var_Hive, BagMRU_Path) # BagMRU 핸들러
