@@ -48,6 +48,7 @@ def BagMRU_Parser():
 		except WindowsError:
 			pass
 
+		
 def Itempos_Size(data):
 	print(data[:2])
 
