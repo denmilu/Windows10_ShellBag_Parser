@@ -1,6 +1,7 @@
 from winreg import *
 from datetime import datetime, timedelta
 import struct
+import csv
 
 def Win_ts(timestamp):
     WIN32_EPOCH = datetime(1601, 1, 1)
@@ -14,8 +15,10 @@ def loop_Sub_Parser(Sub_Var_Key, Sub_Key_Path, Sub_Key_Cut, cut):
 				loop_Key_Path = Sub_Key_Path + r'\\' + name # 서브키에 하위 키 경로를 추가 해준다.
 				loop_Sub_Key = OpenKey(Var_Hive, loop_Key_Path) # 서브키 핸들러 생성
 				ts = QueryInfoKey(loop_Sub_Key)[2] # 작성된 시간
-				print(' '*cut +'{} {} {} {}'.format(loop_Key_Path, name, ts, cut))
+				print(' '*cut +'{} {} {} {}'.format(loop_Key_Path, name, Win_ts(ts).strftime('%Y:%m:%d_%H:%M:%S.%f'), cut))
 				print(' '*cut + 'Itempos_Size : {} File_Size : {} Created_Date : {} Modified_Date : {} File_Name : {}'.format(Itempos_Size(data), File_Size(data), Created_Date(data), Modified_Date(data), File_Name(data)))
+				
+				wr.writerow([loop_Key_Path, Win_ts(ts).strftime('%Y:%m:%d_%H:%M:%S.%f'), Itempos_Size(data), File_Size(data), Created_Date(data), Modified_Date(data) ,File_Name(data)])
 
 				if(QueryInfoKey(loop_Sub_Key)[1] != 2): # 하위키의 값이 더 있을 경우
 					cut+=1
@@ -37,9 +40,11 @@ def BagMRU_Parser():
 				Sub_BagMRU_Path = BagMRU_Path + r'\\' + name # 하위키의 값 경로 만들기
 				Sub_Var_Key = OpenKey(Var_Hive, Sub_BagMRU_Path) # 하위키 핸들러
 				ts = QueryInfoKey(Sub_Var_Key)[2]
-				print(Sub_BagMRU_Path, name, ts ,Itempos_Size(data), cut)
+				print(Sub_BagMRU_Path, name, Win_ts(ts).strftime('%Y:%m:%d_%H:%M:%S.%f') , cut)
 				print('Itempos_Size : {} File_Size : {} Created_Date : {} Modified_Date : {} File_Name : {}'.format(Itempos_Size(data), File_Size(data), Created_Date(data), Modified_Date(data),File_Name(data)))
-
+				
+				wr.writerow([Sub_BagMRU_Path, Win_ts(ts).strftime('%Y:%m:%d_%H:%M:%S.%f'), Itempos_Size(data), File_Size(data), Created_Date(data), Modified_Date(data) ,File_Name(data)])
+				
 				if(QueryInfoKey(Sub_Var_Key)[1] != 2): # 하위키의 값이 2개가 아닐 경우 (2개보다 많을 경우)
 					cut+=1
 					loop_Sub_Parser(Sub_Var_Key, Sub_BagMRU_Path, QueryInfoKey(Sub_Var_Key)[1], cut) # loop_Sub_Parser 호출
@@ -72,9 +77,17 @@ def Modified_Date(data):
 def File_Name(data):
 	return data[0x0E:0x22].replace(b'\x00', b'')
 
+f = open('Shellbag_info.csv', 'w', encoding='utf-8', newline='')
+wr = csv.writer(f)
+wr.writerow(["Reg_Path", "Reg_Modified_Time", "Itempos_Size", "File_Size", "Created_Date", "Modified_Time", "File_Name"])
+
 BagMRU_Path = r'Software\\Classes\\Local Settings\\Software\\Microsoft\\Windows\\Shell\\BagMRU'
 Var_Hive = ConnectRegistry(None, HKEY_CURRENT_USER)
 Var_Key = OpenKey(Var_Hive, BagMRU_Path) # BagMRU 핸들러
 BagMRU_Cut = QueryInfoKey(Var_Key)[1] # BagMRU의 요소 개수
 
 BagMRU_Parser()
+
+f.close()
+
+print('Created_Csv')
