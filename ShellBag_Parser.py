@@ -14,7 +14,7 @@ def loop_Sub_Parser(Sub_Var_Key, Sub_Key_Path, Sub_Key_Cut, cut):
 			if not name in ("MRUListEx", "NodeSlot"):
 				loop_Key_Path = Sub_Key_Path + r'\\' + name 
 				loop_Sub_Key = OpenKey(Var_Hive, loop_Key_Path) 
-				ts = QueryInfoKey(loop_Sub_Key)[2] # 작성된 시간
+				ts = QueryInfoKey(loop_Sub_Key)[2]
 				print(' '*cut +'{} {} {} {}'.format(loop_Key_Path, name, Win_ts(ts).strftime('%Y:%m:%d_%H:%M:%S.%f'), cut))
 				print(' '*cut + 'Itempos_Size : {} File_Size : {} Created_Date : {} Modified_Date : {} File_Name : {}'.format(Itempos_Size(data), File_Size(data), Created_Date(data), Modified_Date(data), File_Name(data)))
 				
@@ -31,7 +31,7 @@ def loop_Sub_Parser(Sub_Var_Key, Sub_Key_Path, Sub_Key_Cut, cut):
 			pass
 
 def BagMRU_Parser():
-	for i in range(BagMRU_Cut): # BagMRU 값 개수
+	for i in range(BagMRU_Cut): 
 		try:
 			cut = 0
 			name, data, x = EnumValue(Var_Key, i)
